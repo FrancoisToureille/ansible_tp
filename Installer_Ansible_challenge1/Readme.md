@@ -15,6 +15,7 @@
 - vagrant ssh ubuntu
 - sudo apt update
 - apt-cache search --names-only ansible
+- sudo apt install -y ansible
 - ansible --version
 - exit
 - vagrant destroy -f ubuntu
