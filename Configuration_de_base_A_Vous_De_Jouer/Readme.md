@@ -1,1 +1,5 @@
  
+
+- sudo nano /etc/hosts
+- 
+
