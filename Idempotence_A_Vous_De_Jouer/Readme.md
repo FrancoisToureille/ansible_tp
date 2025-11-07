@@ -1,48 +1,30 @@
 ## Enoncé
-    Éditez /etc/hosts de manière à ce que les Target Hosts soient joignables par leur nom d'hôte simple.
+   Pour vous familiariser avec la notion d'idempotence, exécutez une série de tâches administratives sur toutes les machines cibles. 
+   
+   Pour ce faire, servez-vous des commandes ad hoc que nous avons vues dans le précédent atelier pratique.
+   
+   Prenez soin d'exécuter chaque commande deux fois et observez ce qui se passe dans l'affichage du résultat.
 
-    Configurez l'authentification par clé SSH avec les trois Target Hosts.
+    Installez successivement les paquets tree, git et nmap sur toutes les cibles.
 
-    Installez Ansible.
+    Désinstallez successivement ces trois paquets en utilisant le paramètre supplémentaire state=absent.
 
-    Envoyez un premier ping Ansible sans configuration.
+    Copiez le fichier /etc/fstab du Control Host vers tous les Target Hosts sous forme d'un fichier /tmp/test3.txt.
 
-    Créez un répertoire de projet ~/monprojet.
+    Supprimez le fichier /tmp/test3.txt sur les Target Hosts en utilisant le module file avec le paramètre state=absent.
 
-    Créez un fichier vide ansible.cfg dans ce répertoire.
-
-    Vérifiez si ce fichier est bien pris en compte par Ansible.
-
-    Spécifiez un inventaire nommé hosts.
-
-    Activez la journalisation dans ~/journal/ansible.log.
-
-    Testez la journalisation.
-
-    Créez un groupe [testlab] avec vos trois Target Hosts.
-
-    Définissez explicitement l'utilisateur vagrant pour la connexion à vos cibles.
-
-    Envoyez un ping Ansible vers le groupe de machines [all].
-
-    Définissez l'élévation des droits pour l'utilisateur vagrant sur les Target Hosts.
-
-    Affichez la première ligne du fichier /etc/shadow sur tous les Target Hosts.
-
-    Quittez le Control Host et supprimez toutes les VM de l'atelier.
+    Enfin, affichez l'espace utilisé par la partition principale sur tous les Target Hosts. Que remarquez-vous ?
 
 ## Commandes
-- sudo nano /etc/hosts
-- ssh-keyscan -t rsa target01 target02 target03 >> .ssh/known_hosts
-- ssh-keygen
-- ssh-copy-id vagrant@target01
-- ssh-copy-id vagrant@target02
-- ssh-copy-id vagrant@target03
-- sudo apt update
-- sudo apt install -y ansible
-- ansible all -i target01,target02,target03 -u vagrant -m ping
-- mkdir monprojet
-- cd monprojet/
-- touch ansible.cfg
-- ansible --version
-- sudo apt install -y direnv
+- vagrant up
+- vagrant ssh ansible
+- cd ansible/projets/ema/
+- ansible all -m package -a "name=tree"
+- ansible all -m package -a "name=git"
+- ansible all -m package -a "name=nmap"
+- ansible all -m package -a "name=tree state=absent"
+- ansible all -m package -a "name=git state=absent"
+- ansible all -m package -a "name=nmap state=absent"
+- ansible all -m copy -a "src=/etc/fstab dest=/tmp/test3.txt"
+- ansible all -m file -a "path=/tmp/test3.txt state=absent"
+- ansible all -m command -a "df -h /"  #*les 3 systèmes n'utilisent pas le même espace disque*
